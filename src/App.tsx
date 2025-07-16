@@ -60,6 +60,10 @@ function App() {
       }
 
       const data = await response.json();
+      
+      // THE DIAGNOSTIC LINE: Log the raw data to the console.
+      console.log('RAW API RESPONSE:', JSON.stringify(data, null, 2));
+
       setAnalysisResult(data);
 
     } catch (err: any) {
@@ -131,7 +135,6 @@ function App() {
                 <AlertTriangle className="w-6 h-6 text-[#EF4444] mr-2" />
                 <h3 className="text-2xl font-semibold text-[#1F2937]">Potential Red Flags Detected</h3>
               </div>
-              {/* THE ROBUST FIX: Check if the data is a valid string before trying to split it. */}
               {analysisResult.redFlagsAnalysis && typeof analysisResult.redFlagsAnalysis === 'string' ? (
                 <ul className="space-y-3">
                   {analysisResult.redFlagsAnalysis.split('•').filter(point => point.trim() !== '').map((point, index) => (
@@ -150,7 +153,6 @@ function App() {
                 <CheckCircle className="w-6 h-6 text-[#2563EB] mr-2" />
                 <h3 className="text-2xl font-semibold text-[#1F2937]">Recommended Next Steps</h3>
               </div>
-              {/* THE ROBUST FIX: Check if the data is a valid string before trying to split it. */}
               {analysisResult.strategicRecommendation && typeof analysisResult.strategicRecommendation === 'string' ? (
                 <ul className="space-y-3">
                   {analysisResult.strategicRecommendation.split('•').filter(point => point.trim() !== '').map((point, index) => (
