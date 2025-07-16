@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Upload, AlertTriangle, CheckCircle, FileText, Shield, TrendingUp } from 'lucide-react';
 import * as pdfjsLib from 'pdfjs-dist';
+import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 
-// THE FIX: Point to the correct .mjs worker file in our /public directory.
-pdfjsLib.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.mjs`;
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 interface AnalysisResult {
   riskScore: number;
@@ -22,7 +22,7 @@ function App() {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFile(file);
-      setError(null); // Clear previous errors
+      setError(null);
     }
   };
 
@@ -40,22 +40,13 @@ function App() {
 
   const handleAnalyze = async () => {
     if (!selectedFile) return;
-
     setIsLoading(true);
     setAnalysisResult(null);
     setError(null);
 
     try {
-      let resumeText = '';
-      if (selectedFile.type === 'application/pdf') {
-        resumeText = await extractTextFromPdf(selectedFile);
-      } else {
-        throw new Error("Invalid file type. Please upload a PDF.");
-      }
-
-      if (!resumeText.trim()) {
-        throw new Error("Could not extract text from the PDF.");
-      }
+      const resumeText = await extractTextFromPdf(selectedFile);
+      if (!resumeText.trim()) throw new Error("Could not extract text from the PDF.");
 
       const response = await fetch('https://prismatic-kleicha-a78d12.netlify.app/.netlify/functions/process', {
         method: 'POST',
@@ -69,14 +60,7 @@ function App() {
       }
 
       const data = await response.json();
-
-      const formattedResult: AnalysisResult = {
-        riskScore: data.riskScore,
-        redFlagsAnalysis: data.analysis,
-        strategicRecommendation: `• **Immediate Action Required**: This resume needs thorough verification based on the flags detected.\n• **Interview Red Flags**: Prepare targeted questions about the specific issues raised in the analysis.\n• **Documentation**: Request portfolio samples and project documentation for validation.`
-      };
-
-      setAnalysisResult(formattedResult);
+      setAnalysisResult(data); // THE FIX: Use the entire data object from the API directly.
 
     } catch (err: any) {
       console.error("Analysis failed:", err);
@@ -86,7 +70,7 @@ function App() {
     }
   };
   
-    const CircularProgress = ({ score }: { score: number }) => {
+  const CircularProgress = ({ score }: { score: number }) => {
     const radius = 50;
     const circumference = 2 * Math.PI * radius;
     const strokeDashoffset = circumference - (score / 100) * circumference;
@@ -141,26 +125,24 @@ function App() {
             </div>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            {/* Danger Column */}
             <div className="bg-red-50 border border-red-200 rounded-lg p-6">
               <div className="flex items-center mb-4">
                 <AlertTriangle className="w-6 h-6 text-[#EF4444] mr-2" />
                 <h3 className="text-2xl font-semibold text-[#1F2937]">Potential Red Flags Detected</h3>
               </div>
-              <div className="text-[#1F2937] leading-relaxed space-y-3">
-                <ReactMarkdown components={{ p: props => <p className="flex items-start"><span className="w-2 h-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0"></span><span>{props.children}</span></p>, strong: 'strong' }}>
-                  {analysisResult.redFlagsAnalysis.replace(/•/g, '')}
-                </ReactMarkdown>
+              <div className="text-[#1F2937] leading-relaxed prose prose-sm">
+                <ReactMarkdown>{analysisResult.redFlagsAnalysis}</ReactMarkdown>
               </div>
             </div>
+            {/* Solution Column */}
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <div className="flex items-center mb-4">
                 <CheckCircle className="w-6 h-6 text-[#2563EB] mr-2" />
                 <h3 className="text-2xl font-semibold text-[#1F2937]">Recommended Next Steps</h3>
               </div>
-              <div className="text-[#1F2937] leading-relaxed space-y-3">
-                 <ReactMarkdown components={{ p: props => <p className="flex items-start"><span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span><span>{props.children}</span></p>, strong: 'strong' }}>
-                  {analysisResult.strategicRecommendation.replace(/•/g, '')}
-                </ReactMarkdown>
+              <div className="text-[#1F2937] leading-relaxed prose prose-sm">
+                 <ReactMarkdown>{analysisResult.strategicRecommendation}</ReactMarkdown>
               </div>
             </div>
           </div>

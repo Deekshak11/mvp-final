@@ -1,20 +1,17 @@
 const OpenAI = require("openai");
 
-// Configure the OpenAI client to use the OpenRouter endpoint
 const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
   apiKey: process.env.OPENROUTER_API_KEY,
 });
 
 exports.handler = async function(event, context) {
-  // Only allow POST requests
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
 
   try {
     const { resumeText } = JSON.parse(event.body);
-
     if (!resumeText) {
       return { statusCode: 400, body: "Missing resumeText in request body" };
     }
@@ -24,8 +21,8 @@ exports.handler = async function(event, context) {
       messages: [
         {
           role: "system",
-          // THE FIX: Added strict instructions for concise, one-sentence bullet points.
-          content: "You are a skeptical, world-class hiring manager. Your goal is to assess resume authenticity. Analyze the resume for red flags like AI-generated language, vague claims, and inconsistencies. You MUST return a single, clean JSON object with two keys: 'riskScore' (a number from 0-100) and 'analysis' (a markdown-formatted string). The 'analysis' MUST be a bulleted list. Each bullet point MUST be a single, concise sentence summarizing a specific red flag. For example: '• Generic Language: Achievements lack specific metrics, making their impact unquantifiable.'"
+          // THE FINAL PROMPT: Demands BOTH sections in the correct format.
+          content: "You are a skeptical hiring manager. Analyze the resume for red flags. You MUST return a single, clean JSON object with THREE keys: 'riskScore' (0-100), 'redFlagsAnalysis' (a markdown-bulleted list of concise, one-sentence red flags), and 'strategicRecommendation' (a markdown-bulleted list of concise, one-sentence next steps based on the flags). For example: '• **Vague Objective**: The objective lacks specific, quantifiable goals.'"
         },
         {
           role: "user",
