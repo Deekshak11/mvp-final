@@ -8,8 +8,8 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 interface AnalysisResult {
   riskScore: number;
-  redFlagsAnalysis: string;
-  strategicRecommendation: string;
+  redFlagsAnalysis: string[]; // This is now an array of strings
+  strategicRecommendation: string[]; // This is now an array of strings
 }
 
 function App() {
@@ -60,10 +60,6 @@ function App() {
       }
 
       const data = await response.json();
-      
-      // THE DIAGNOSTIC LINE: Log the raw data to the console.
-      console.log('RAW API RESPONSE:', JSON.stringify(data, null, 2));
-
       setAnalysisResult(data);
 
     } catch (err: any) {
@@ -135,11 +131,12 @@ function App() {
                 <AlertTriangle className="w-6 h-6 text-[#EF4444] mr-2" />
                 <h3 className="text-2xl font-semibold text-[#1F2937]">Potential Red Flags Detected</h3>
               </div>
-              {analysisResult.redFlagsAnalysis && typeof analysisResult.redFlagsAnalysis === 'string' ? (
+              {/* THE FINAL FIX: Map over the array directly */}
+              {analysisResult.redFlagsAnalysis && Array.isArray(analysisResult.redFlagsAnalysis) ? (
                 <ul className="space-y-3">
-                  {analysisResult.redFlagsAnalysis.split('•').filter(point => point.trim() !== '').map((point, index) => (
+                  {analysisResult.redFlagsAnalysis.map((point, index) => (
                     <li key={index} className="text-[#1F2937] leading-relaxed">
-                      <ReactMarkdown>{`• ${point}`}</ReactMarkdown>
+                      <ReactMarkdown>{point}</ReactMarkdown>
                     </li>
                   ))}
                 </ul>
@@ -153,11 +150,12 @@ function App() {
                 <CheckCircle className="w-6 h-6 text-[#2563EB] mr-2" />
                 <h3 className="text-2xl font-semibold text-[#1F2937]">Recommended Next Steps</h3>
               </div>
-              {analysisResult.strategicRecommendation && typeof analysisResult.strategicRecommendation === 'string' ? (
+              {/* THE FINAL FIX: Map over the array directly */}
+              {analysisResult.strategicRecommendation && Array.isArray(analysisResult.strategicRecommendation) ? (
                 <ul className="space-y-3">
-                  {analysisResult.strategicRecommendation.split('•').filter(point => point.trim() !== '').map((point, index) => (
+                  {analysisResult.strategicRecommendation.map((point, index) => (
                     <li key={index} className="text-[#1F2937] leading-relaxed">
-                      <ReactMarkdown>{`• ${point}`}</ReactMarkdown>
+                      <ReactMarkdown>{point}</ReactMarkdown>
                     </li>
                   ))}
                 </ul>

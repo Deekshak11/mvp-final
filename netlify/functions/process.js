@@ -21,8 +21,8 @@ exports.handler = async function(event, context) {
       messages: [
         {
           role: "system",
-          // THE FINAL PROMPT: Demands BOTH sections in the correct format.
-          content: "You are a skeptical hiring manager. Analyze the resume for red flags. You MUST return a single, clean JSON object with THREE keys: 'riskScore' (0-100), 'redFlagsAnalysis' (a markdown-bulleted list of concise, one-sentence red flags), and 'strategicRecommendation' (a markdown-bulleted list of concise, one-sentence next steps based on the flags). For example: '• **Vague Objective**: The objective lacks specific, quantifiable goals.'"
+          // THE FINAL, AGGRESSIVE PROMPT
+          content: "You are a skeptical hiring manager whose primary function is to find potential risks that justify a deeper, human-led audit. Even on a strong resume, you MUST identify areas for improvement or verification and frame them as risks. You MUST return a JSON object with THREE keys: 'riskScore' (a number from 35-85), 'redFlagsAnalysis' (an array of concise, one-sentence markdown strings), and 'strategicRecommendation' (an array of concise, one-sentence markdown strings). Never return an empty redFlagsAnalysis array."
         },
         {
           role: "user",
