@@ -168,7 +168,7 @@ function App() {
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
             <h3 className="text-2xl font-semibold text-[#1F2937] mb-4">These Red Flags Are Just the Tip of the Iceberg.</h3>
-            <p className="text-[#6B7280] mb-6 max-w-2xl mx-auto">A single bad hire can cost you thousands. This report shows the risk in one resume—imagine what's hiding in your entire pipeline. In a free Pipeline Risk Audit, I'll help you build a system to eliminate these threats for good.</p>
+            <p className="text-[#6B7280] mb-6 max-w-2xl mx-auto">A single bad hire can cost you thousands. This report shows the risk in one resume, but imagine what's hiding in your entire pipeline. In a free Pipeline Risk Audit, I'll help you build a system to eliminate these threats for good.</p>
             <a href="https://calendar.app.google/aHLFmdTNFsM8gK958" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-8 py-3 bg-[#2563EB] text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200">
               <Shield className="w-5 h-5 mr-2" />
               Book Your Free Pipeline Audit
@@ -189,7 +189,7 @@ function App() {
           </h1>
           {/* THE FIX: Updated subheadline copy */}
           <p className="text-xl text-[#6B7280] leading-relaxed">
-            For recruiters buried under a mountain of unqualified applicants, our tool automatically detects AI-generated content and verifies claims. Identify the risks INSTANTLY.
+            For recruiters buried under a mountain of unqualified applicants, our tool automatically detects AI-generated resumes and verifies claims. Identify the risks INSTANTLY and take action.
           </p>
         </div>
 
