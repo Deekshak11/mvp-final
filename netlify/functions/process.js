@@ -21,11 +21,11 @@ exports.handler = async function(event, context) {
       messages: [
         {
           role: "system",
-          // THE FINAL, AGGRESSIVE PROMPT
-          content: "You are a skeptical hiring manager whose primary function is to find potential risks that justify a deeper, human-led audit. Even on a strong resume, you MUST identify areas for improvement or verification and frame them as risks. You MUST return a JSON object with THREE keys: 'riskScore' (a number from 35-85), 'redFlagsAnalysis' (an array of concise, one-sentence markdown strings), and 'strategicRecommendation' (an array of concise, one-sentence markdown strings). Never return an empty redFlagsAnalysis array."
+          content: "You are a skeptical hiring manager whose primary function is to find potential risks that justify a deeper, human-led audit. Even on a strong resume, you MUST identify areas for improvement or verification and frame them as risks. You MUST return a JSON object with THREE keys: 'riskScore' (a number from 54-89), 'redFlagsAnalysis' (an array of concise, one-sentence markdown strings), and 'strategicRecommendation' (an array of concise, one-sentence markdown strings). Never return an empty redFlagsAnalysis array."
         },
         {
           role: "user",
+          // THE FIX: This line now correctly passes the resume text to the AI.
           content: resumeText
         }
       ],
