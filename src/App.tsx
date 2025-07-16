@@ -60,7 +60,7 @@ function App() {
       }
 
       const data = await response.json();
-      setAnalysisResult(data); // THE FIX: Use the entire data object from the API directly.
+      setAnalysisResult(data);
 
     } catch (err: any) {
       console.error("Analysis failed:", err);
@@ -131,9 +131,15 @@ function App() {
                 <AlertTriangle className="w-6 h-6 text-[#EF4444] mr-2" />
                 <h3 className="text-2xl font-semibold text-[#1F2937]">Potential Red Flags Detected</h3>
               </div>
-              <div className="text-[#1F2937] leading-relaxed prose prose-sm">
-                <ReactMarkdown>{analysisResult.redFlagsAnalysis}</ReactMarkdown>
-              </div>
+              {/* THE FIX: Removed 'prose' and added explicit component styling */}
+              <ReactMarkdown
+                components={{
+                  ul: ({node, ...props}) => <ul className="space-y-3" {...props} />,
+                  li: ({node, ...props}) => <li className="text-[#1F2937] leading-relaxed" {...props} />,
+                }}
+              >
+                {analysisResult.redFlagsAnalysis}
+              </ReactMarkdown>
             </div>
             {/* Solution Column */}
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -141,9 +147,15 @@ function App() {
                 <CheckCircle className="w-6 h-6 text-[#2563EB] mr-2" />
                 <h3 className="text-2xl font-semibold text-[#1F2937]">Recommended Next Steps</h3>
               </div>
-              <div className="text-[#1F2937] leading-relaxed prose prose-sm">
-                 <ReactMarkdown>{analysisResult.strategicRecommendation}</ReactMarkdown>
-              </div>
+              {/* THE FIX: Removed 'prose' and added explicit component styling */}
+              <ReactMarkdown
+                components={{
+                  ul: ({node, ...props}) => <ul className="space-y-3" {...props} />,
+                  li: ({node, ...props}) => <li className="text-[#1F2937] leading-relaxed" {...props} />,
+                }}
+              >
+                 {analysisResult.strategicRecommendation}
+              </ReactMarkdown>
             </div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
