@@ -3,11 +3,8 @@ import ReactMarkdown from 'react-markdown';
 import { Upload, AlertTriangle, CheckCircle, FileText, Shield, TrendingUp } from 'lucide-react';
 import * as pdfjsLib from 'pdfjs-dist';
 
-// THE FIX: Import the worker directly from the installed package.
-// The '?url' tells our build tool (Vite) to provide a correct URL to this file.
-import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.js?url';
-
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
+// THE FIX: Point to the correct .mjs worker file in our /public directory.
+pdfjsLib.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.mjs`;
 
 interface AnalysisResult {
   riskScore: number;
