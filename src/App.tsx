@@ -8,8 +8,8 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 interface AnalysisResult {
   riskScore: number;
-  redFlagsAnalysis: string[]; // This is now an array of strings
-  strategicRecommendation: string[]; // This is now an array of strings
+  redFlagsAnalysis: string[];
+  strategicRecommendation: string[];
 }
 
 function App() {
@@ -131,12 +131,13 @@ function App() {
                 <AlertTriangle className="w-6 h-6 text-[#EF4444] mr-2" />
                 <h3 className="text-2xl font-semibold text-[#1F2937]">Potential Red Flags Detected</h3>
               </div>
-              {/* THE FINAL FIX: Map over the array directly */}
               {analysisResult.redFlagsAnalysis && Array.isArray(analysisResult.redFlagsAnalysis) ? (
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {analysisResult.redFlagsAnalysis.map((point, index) => (
-                    <li key={index} className="text-[#1F2937] leading-relaxed">
-                      <ReactMarkdown>{point}</ReactMarkdown>
+                    // THE FIX: Added a flex container and a colored dot span
+                    <li key={index} className="flex items-start">
+                      <span className="w-2 h-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <div className="text-[#1F2937] leading-relaxed"><ReactMarkdown>{point.replace('•', '')}</ReactMarkdown></div>
                     </li>
                   ))}
                 </ul>
@@ -150,12 +151,13 @@ function App() {
                 <CheckCircle className="w-6 h-6 text-[#2563EB] mr-2" />
                 <h3 className="text-2xl font-semibold text-[#1F2937]">Recommended Next Steps</h3>
               </div>
-              {/* THE FINAL FIX: Map over the array directly */}
               {analysisResult.strategicRecommendation && Array.isArray(analysisResult.strategicRecommendation) ? (
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {analysisResult.strategicRecommendation.map((point, index) => (
-                    <li key={index} className="text-[#1F2937] leading-relaxed">
-                      <ReactMarkdown>{point}</ReactMarkdown>
+                    // THE FIX: Added a flex container and a colored dot span
+                    <li key={index} className="flex items-start">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <div className="text-[#1F2937] leading-relaxed"><ReactMarkdown>{point.replace('•', '')}</ReactMarkdown></div>
                     </li>
                   ))}
                 </ul>
@@ -180,13 +182,20 @@ function App() {
   return (
     <div className="min-h-screen bg-[#F9FAFB] py-12 px-4">
       <div className="max-w-2xl mx-auto">
+        {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-semibold text-[#1F2937] mb-6 leading-tight">Stop Drowning in Fake Resumes.</h1>
-          <p className="text-xl text-[#6B7280] leading-relaxed">For recruiters buried under a mountain of unqualified applicants, our tool automatically detects AI-generated content and verifies claims. Get a trustworthy shortlist in minutes.</p>
+          <h1 className="text-4xl md:text-5xl font-semibold text-[#1F2937] mb-6 leading-tight">
+            Stop Drowning in Fake Resumes.
+          </h1>
+          {/* THE FIX: Updated subheadline copy */}
+          <p className="text-xl text-[#6B7280] leading-relaxed">
+            For recruiters buried under a mountain of unqualified applicants, our tool automatically detects AI-generated content and verifies claims. Identify the risks INSTANTLY.
+          </p>
         </div>
+
+        {/* Main Upload Card */}
         <div className="bg-white rounded-lg border border-gray-200 p-8 shadow-sm">
-          <h2 className="text-2xl font-semibold text-[#1F2937] mb-3">Generate Your Free Resume Risk Scorecard</h2>
-          <p className="text-[#6B7280] mb-8">Upload a resume to see the hidden red flags you might be missing.</p>
+          {/* THE FIX: Removed redundant H2 and P tags */}
           {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert"><strong className="font-bold">Error: </strong><span className="block sm:inline">{error}</span></div>}
           <div className="mb-6">
             <label className="block">
