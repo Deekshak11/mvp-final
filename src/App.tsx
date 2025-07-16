@@ -131,14 +131,18 @@ function App() {
                 <AlertTriangle className="w-6 h-6 text-[#EF4444] mr-2" />
                 <h3 className="text-2xl font-semibold text-[#1F2937]">Potential Red Flags Detected</h3>
               </div>
-              {/* THE FIX: Manually build the list to guarantee correct rendering */}
-              <ul className="space-y-3">
-                {analysisResult.redFlagsAnalysis.split('•').filter(point => point.trim() !== '').map((point, index) => (
-                  <li key={index} className="text-[#1F2937] leading-relaxed">
-                    <ReactMarkdown>{`• ${point}`}</ReactMarkdown>
-                  </li>
-                ))}
-              </ul>
+              {/* THE ROBUST FIX: Check if the data is a valid string before trying to split it. */}
+              {analysisResult.redFlagsAnalysis && typeof analysisResult.redFlagsAnalysis === 'string' ? (
+                <ul className="space-y-3">
+                  {analysisResult.redFlagsAnalysis.split('•').filter(point => point.trim() !== '').map((point, index) => (
+                    <li key={index} className="text-[#1F2937] leading-relaxed">
+                      <ReactMarkdown>{`• ${point}`}</ReactMarkdown>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-[#6B7280]">No detailed red flags were provided in the analysis.</p>
+              )}
             </div>
             {/* Solution Column */}
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -146,14 +150,18 @@ function App() {
                 <CheckCircle className="w-6 h-6 text-[#2563EB] mr-2" />
                 <h3 className="text-2xl font-semibold text-[#1F2937]">Recommended Next Steps</h3>
               </div>
-              {/* THE FIX: Manually build the list to guarantee correct rendering */}
-              <ul className="space-y-3">
-                {analysisResult.strategicRecommendation.split('•').filter(point => point.trim() !== '').map((point, index) => (
-                  <li key={index} className="text-[#1F2937] leading-relaxed">
-                    <ReactMarkdown>{`• ${point}`}</ReactMarkdown>
-                  </li>
-                ))}
-              </ul>
+              {/* THE ROBUST FIX: Check if the data is a valid string before trying to split it. */}
+              {analysisResult.strategicRecommendation && typeof analysisResult.strategicRecommendation === 'string' ? (
+                <ul className="space-y-3">
+                  {analysisResult.strategicRecommendation.split('•').filter(point => point.trim() !== '').map((point, index) => (
+                    <li key={index} className="text-[#1F2937] leading-relaxed">
+                      <ReactMarkdown>{`• ${point}`}</ReactMarkdown>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-[#6B7280]">No specific recommendations were provided.</p>
+              )}
             </div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
