@@ -24,14 +24,15 @@ exports.handler = async function(event, context) {
       messages: [
         {
           role: "system",
-          content: "You are a skeptical, world-class hiring manager and a specialist in forensic linguistics. Your primary goal is to assess the authenticity of a resume. Analyze the provided resume text for red flags like AI-generated language, disproportionate claims, and vague achievements. You MUST return a single, clean JSON object with exactly two keys: 'riskScore' (a number from 0-100) and 'analysis' (a markdown-formatted string detailing the specific red flags found, citing examples from the text)."
+          // THE FIX: Added strict instructions for concise, one-sentence bullet points.
+          content: "You are a skeptical, world-class hiring manager. Your goal is to assess resume authenticity. Analyze the resume for red flags like AI-generated language, vague claims, and inconsistencies. You MUST return a single, clean JSON object with two keys: 'riskScore' (a number from 0-100) and 'analysis' (a markdown-formatted string). The 'analysis' MUST be a bulleted list. Each bullet point MUST be a single, concise sentence summarizing a specific red flag. For example: '• Generic Language: Achievements lack specific metrics, making their impact unquantifiable.'"
         },
         {
           role: "user",
           content: resumeText
         }
       ],
-      response_format: { type: "json_object" } // Ensure the response is always JSON
+      response_format: { type: "json_object" }
     });
 
     const analysisResult = JSON.parse(completion.choices[0].message.content);
