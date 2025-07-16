@@ -3,8 +3,11 @@ import ReactMarkdown from 'react-markdown';
 import { Upload, AlertTriangle, CheckCircle, FileText, Shield, TrendingUp } from 'lucide-react';
 import * as pdfjsLib from 'pdfjs-dist';
 
-// Set up the worker for pdf.js
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+// THE FIX: Import the worker directly from the installed package.
+// The '?url' tells our build tool (Vite) to provide a correct URL to this file.
+import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.js?url';
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 interface AnalysisResult {
   riskScore: number;
@@ -26,7 +29,6 @@ function App() {
     }
   };
 
-  // NEW: Function to extract text from a PDF file
   const extractTextFromPdf = async (file: File): Promise<string> => {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
@@ -48,16 +50,14 @@ function App() {
 
     try {
       let resumeText = '';
-      // Check file type and parse accordingly
       if (selectedFile.type === 'application/pdf') {
         resumeText = await extractTextFromPdf(selectedFile);
       } else {
-        // Fallback for text files, docx would require another library
-        resumeText = await selectedFile.text();
+        throw new Error("Invalid file type. Please upload a PDF.");
       }
 
       if (!resumeText.trim()) {
-        throw new Error("Could not extract text from the file.");
+        throw new Error("Could not extract text from the PDF.");
       }
 
       const response = await fetch('https://prismatic-kleicha-a78d12.netlify.app/.netlify/functions/process', {
