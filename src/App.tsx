@@ -131,15 +131,14 @@ function App() {
                 <AlertTriangle className="w-6 h-6 text-[#EF4444] mr-2" />
                 <h3 className="text-2xl font-semibold text-[#1F2937]">Potential Red Flags Detected</h3>
               </div>
-              {/* THE FIX: Removed 'prose' and added explicit component styling */}
-              <ReactMarkdown
-                components={{
-                  ul: ({node, ...props}) => <ul className="space-y-3" {...props} />,
-                  li: ({node, ...props}) => <li className="text-[#1F2937] leading-relaxed" {...props} />,
-                }}
-              >
-                {analysisResult.redFlagsAnalysis}
-              </ReactMarkdown>
+              {/* THE FIX: Manually build the list to guarantee correct rendering */}
+              <ul className="space-y-3">
+                {analysisResult.redFlagsAnalysis.split('•').filter(point => point.trim() !== '').map((point, index) => (
+                  <li key={index} className="text-[#1F2937] leading-relaxed">
+                    <ReactMarkdown>{`• ${point}`}</ReactMarkdown>
+                  </li>
+                ))}
+              </ul>
             </div>
             {/* Solution Column */}
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -147,15 +146,14 @@ function App() {
                 <CheckCircle className="w-6 h-6 text-[#2563EB] mr-2" />
                 <h3 className="text-2xl font-semibold text-[#1F2937]">Recommended Next Steps</h3>
               </div>
-              {/* THE FIX: Removed 'prose' and added explicit component styling */}
-              <ReactMarkdown
-                components={{
-                  ul: ({node, ...props}) => <ul className="space-y-3" {...props} />,
-                  li: ({node, ...props}) => <li className="text-[#1F2937] leading-relaxed" {...props} />,
-                }}
-              >
-                 {analysisResult.strategicRecommendation}
-              </ReactMarkdown>
+              {/* THE FIX: Manually build the list to guarantee correct rendering */}
+              <ul className="space-y-3">
+                {analysisResult.strategicRecommendation.split('•').filter(point => point.trim() !== '').map((point, index) => (
+                  <li key={index} className="text-[#1F2937] leading-relaxed">
+                    <ReactMarkdown>{`• ${point}`}</ReactMarkdown>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
